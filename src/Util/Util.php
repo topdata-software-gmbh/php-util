@@ -9,26 +9,6 @@ use Colors\Color;
 class Util
 {
 
-    /**
-     * TODO: move this somewhere else..
-     *
-     * @return bool
-     */
-    public static function isLive(): bool
-    {
-        return preg_match('#^/home/marc/devel/#', __DIR__) == 0;
-    }
-
-
-    /**
-     * TODO: move this somewhere else..
-     *
-     * @return bool
-     */
-    public static function isDevel(): bool
-    {
-        return !self::isLive();
-    }
 
 
     /**
