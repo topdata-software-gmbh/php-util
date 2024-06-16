@@ -1,15 +1,15 @@
 {
-    "name": "whyoo-os/php-util",
+    "name": "topdata-software-gmbh/php-util",
     "type": "library",
     "description": "Utility classes for php",
     "keywords": [
         "util",
         "utility"
     ],
-    "homepage": "https://github.com/whyoo-os/php-util",
+    "homepage": "https://github.com/topdata-software-gmbh/php-util",
     "license": "MIT",
     "require": {
-        "php": ">=7.0"
+        "php": ">=8.0"
     },
     "suggest": {
         "symfony/var-dumper": "for UtilDebug",
