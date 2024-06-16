@@ -23,8 +23,8 @@
     },
     "autoload": {
         "psr-4": {
-            "WhyooOs\\Util\\": "src/WhyooOs/Util/",
-            "WhyooOs\\HelperClasses\\": "src/WhyooOs/HelperClasses/"
+            "TopdataSoftwareGmbH\\Util\\": "src/Util/",
+            "TopdataSoftwareGmbH\\HelperClasses\\": "src/HelperClasses/"
         }
     },
     "version": "4.0.0"
