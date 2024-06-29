@@ -206,4 +206,66 @@ class UtilDebug
     }
 
 
+
+
+    /**
+     * gron must be installed
+     *
+     * @see https://github.com/tomnomnom/gron?tab=readme-ov-file#installation
+     *
+     * 06/2024 created
+     * 06/2024 mode from UtilJson to UtilDebug
+     */
+    public static function gron(mixed $data): string
+    {
+        $pathJsonFile = '/tmp/gron-' . uniqid() . '.json';
+        UtilJson::saveJsonFile($pathJsonFile, $data);
+        // run gron on the file
+        $cmd = 'gron ' . $pathJsonFile;
+        $output = shell_exec($cmd);
+        // cleanup
+        unlink($pathJsonFile);
+
+        return $output;
+    }
+
+
+    /**
+     * tree - Converts a data structure into an ASCII tree
+     *
+     * recursive function
+     *
+     * 06/2024 created
+     *
+     * @param array|object $data The data structure to convert.
+     * @param string $prefix Used for formatting the tree (internal use).
+     * @return string The ASCII representation of the tree.
+     */
+    public static function tree(array|object $data, string $prefix = ''): string
+    {
+        $output = '';
+        $isLast = function ($key, $array) {
+            return $key === array_key_last($array);
+        };
+
+        foreach ($data as $key => $value) {
+            $output .= $prefix;
+            if ($isLast($key, $data)) {
+                $output .= ' ^t^t ^t^` ^t^` ';
+                $newPrefix = $prefix . '    ';
+            } else {
+                $output .= ' ^t^| ^t^` ^t^` ';
+                $newPrefix = $prefix . ' ^t^b   ';
+            }
+            if (is_array($value) || is_object($value)) {
+                $output .= "$key\n";
+                $output .= self::tree($value, $newPrefix);
+            } else {
+                $output .= "$key: $value\n";
+            }
+        }
+        return $output;
+    }
+
+
 }

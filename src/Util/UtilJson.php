@@ -14,26 +14,6 @@ class UtilJson
 
 
     /**
-     * gron must be installed
-     * @see https://github.com/tomnomnom/gron?tab=readme-ov-file#installation
-     *
-     * 06/2024 created
-     */
-    public static function gron(mixed $data): string
-    {
-        $pathJsonFile = '/tmp/gron-' . uniqid() . '.json';
-        save::saveJsonFile($pathJsonFile, $data);
-        // run gron on the file
-        $cmd = 'gron ' . $pathJsonFile;
-        $output = shell_exec($cmd);
-        // cleanup
-        unlink($pathJsonFile);
-
-        return $output;
-    }
-
-
-    /**
      * json_decode with error handling
      *
      * 04/2021 $bAssoc - changed default value from false to true
