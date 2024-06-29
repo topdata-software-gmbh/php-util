@@ -251,11 +251,11 @@ class UtilDebug
         foreach ($data as $key => $value) {
             $output .= $prefix;
             if ($isLast($key, $data)) {
-                $output .= ' ^t^t ^t^` ^t^` ';
+                $output .= '└── ';
                 $newPrefix = $prefix . '    ';
             } else {
-                $output .= ' ^t^| ^t^` ^t^` ';
-                $newPrefix = $prefix . ' ^t^b   ';
+                $output .= '├── ';
+                $newPrefix = $prefix . '│   ';
             }
             if (is_array($value) || is_object($value)) {
                 $output .= "$key\n";
@@ -264,8 +264,8 @@ class UtilDebug
                 $output .= "$key: $value\n";
             }
         }
-        return $output;
-    }
+
+        return $output;    }
 
 
 }
