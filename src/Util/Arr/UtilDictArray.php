@@ -259,7 +259,7 @@ class UtilDictArray
     public static function pickColumns(array $arr, array $columns): array
     {
         return array_map(function ($item) use ($columns) {
-            return array_merge(array_intersect_key($item, array_flip($columns)));
+            return array_intersect_key($item, array_flip($columns));
         }, $arr);
     }  
 
