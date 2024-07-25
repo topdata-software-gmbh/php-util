@@ -250,5 +250,19 @@ class UtilDictArray
     }
 
 
+    /**
+     * 07/2024 created
+     * 
+     * @param array $arr
+     * @param string[] $columns
+     */
+    public static function pickColumns(array $arr, array $columns): array
+    {
+        return array_map(function ($item) use ($columns) {
+            return array_merge(array_intersect_key($item, array_flip($columns)));
+        }, $arr);
+    }  
+
+
 
 }
