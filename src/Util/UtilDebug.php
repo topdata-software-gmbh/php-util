@@ -5,6 +5,8 @@ namespace TopdataSoftwareGmbH\Util;
 
 use App\Entity\Tenant\ListImportsV2\V2Column\FieldColumn\V2ColumnFieldImported;
 use SqlFormatter;
+use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
 
 /**
  * 07/2017
@@ -236,36 +238,71 @@ class UtilDebug
      * recursive function
      *
      * 06/2024 created
+     * 07/2024 using now symfony/property-access
      *
      * @param array|object $data The data structure to convert.
      * @param string $prefix Used for formatting the tree (internal use).
      * @return string The ASCII representation of the tree.
      */
-    public static function tree(array|object $data, string $prefix = ''): string
+    public static function tree(array|object $data, string $prefix = '', ?PropertyAccessor $propertyAccessor = null): string
     {
+        if ($propertyAccessor === null) {
+            $propertyAccessor = PropertyAccess::createPropertyAccessor();
+        }
+
         $output = '';
         $isLast = function ($key, $array) {
             return $key === array_key_last($array);
         };
 
-        foreach ($data as $key => $value) {
+        if (is_array($data)) {
+            $iterator = $data;
+        } else {
+            $iterator = self::_getObjectProperties($data, $propertyAccessor);
+        }
+
+        foreach ($iterator as $key => $value) {
             $output .= $prefix;
-            if ($isLast($key, $data)) {
+            if ($isLast($key, $iterator)) {
                 $output .= '└── ';
                 $newPrefix = $prefix . '    ';
             } else {
                 $output .= '├── ';
                 $newPrefix = $prefix . '│   ';
             }
+
             if (is_array($value) || is_object($value)) {
                 $output .= "$key\n";
-                $output .= self::tree($value, $newPrefix);
+                $output .= self::tree($value, $newPrefix, $propertyAccessor);
             } else {
                 $output .= "$key: $value\n";
             }
         }
 
-        return $output;    }
+        return $output;
+    }
 
+    /**
+     * getObjectProperties - Gets the properties of an object using PropertyAccessor
+     *
+     * @param object $object The object to get properties from.
+     * @param PropertyAccessor $propertyAccessor The PropertyAccessor instance.
+     * @return array The properties and their values.
+     */
+    private static function _getObjectProperties(object $object, PropertyAccessor $propertyAccessor): array
+    {
+        $reflectionClass = new \ReflectionClass($object);
+        $properties = [];
+
+        foreach ($reflectionClass->getProperties() as $property) {
+            $propertyName = $property->getName();
+            $propertyPath = ucfirst($propertyName);
+            if ($propertyAccessor->isReadable($object, $propertyPath)) {
+                $properties[$propertyName] = $propertyAccessor->getValue($object, $propertyPath);
+            }
+        }
+
+        return $properties;
+    }
 
 }
