@@ -4,9 +4,15 @@
 namespace TopdataSoftwareGmbH\Util;
 
 use App\Entity\Tenant\ListImportsV2\V2Column\FieldColumn\V2ColumnFieldImported;
+use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 use SqlFormatter;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
+use Symfony\Component\VarDumper\Cloner\VarCloner;
+use Symfony\Component\VarDumper\Dumper\CliDumper;
+use Symfony\Component\VarDumper\Dumper\HtmlDumper;
+use Symfony\Component\VarDumper\VarDumper;
 
 /**
  * 07/2017
@@ -18,10 +24,13 @@ class UtilDebug
     const EMOTICON_DUMP_POST     = '🙄';
     const EMOTICON_DUMP_DIE_POST = '💥🙄';
 
-    //    const EMOTICON_DUMP          = '🙄';
+//    const EMOTICON_DUMP          = '🙄';
 //    const EMOTICON_DUMP_DIE      = '💥🙄';
-//    const EMOTICON_DUMP_DIE = '💥🙄🔥';
+//    const EMOTICON_DUMP_DIE      = '💥🙄🔥';
 
+
+
+    private static bool $_varDumperInitialized = false;
 
     private static $timeProfilers = [];
 
@@ -50,10 +59,47 @@ class UtilDebug
 
 
     /**
+     * we use it for more concise dumps of carbon objects
+     *
+     * 07/2024 created
+     */
+    public static function initVardumper(): void
+    {
+        if(self::$_varDumperInitialized) {
+            return;
+        }
+
+        VarDumper::setHandler(function ($var) {
+            $cloner = new VarCloner();
+            $cloner->addCasters([
+                Carbon::class => function (Carbon $c, array $a) {
+                    return [
+                        'datetime' => $c->toDateTimeString() . " ({$c->tzName})",
+                    ];
+                },
+                CarbonImmutable::class => function (CarbonImmutable $c, array $a) {
+                    return [
+                        'datetime' => $c->toDateTimeString() . " ({$c->tzName})",
+                    ];
+                },
+            ]);
+
+            $dumper = in_array(PHP_SAPI, ['cli', 'phpdbg']) ? new CliDumper() : new HtmlDumper();
+            $dumper->setColors(true);
+
+            $dumper->dump($cloner->cloneVar($var));
+        });
+
+        self::$_varDumperInitialized = true;
+    }
+
+
+    /**
      * dump + die
      */
     public static function dd()/*: never*/
     {
+        self::initVardumper();
         foreach (func_get_args() as $arg) {
             dump($arg);
         }
