@@ -66,6 +66,7 @@ class UtilFormatter
 
     /**
      * 10/2017 from scrapers
+     * 08/2024 "0 B" fix added
      *
      * @param int $sizeInBytes
      * @param int $precision
@@ -73,6 +74,10 @@ class UtilFormatter
      */
     public static function formatBytes(int $sizeInBytes, int $precision = 2): string
     {
+        if($sizeInBytes === 0) {
+            return '0 B';
+        }
+
         $base = log($sizeInBytes, 1024);
         $suffixes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
 
