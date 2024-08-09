@@ -13,16 +13,18 @@ class UtilException
 
     /**
      * jTraceEx() - provide a Java style exception trace
-     * @param $exception
-     * @param $seen - array passed to recursive calls to accumulate trace lines already seen
+     *
+     * @param array|null $seen - array passed to recursive calls to accumulate trace lines already seen
      *                     leave as NULL when calling this function
      * @return string  nicely formatted exception
      */
-    public static function jTraceEx(\Exception $e, $seen = null)
+    public static function jTraceEx(\Throwable $e, ?array $seen = null)
     {
         $starter = $seen ? 'Caused by: ' : '';
-        $result = array();
-        if (!$seen) $seen = array();
+        $result = [];
+        if (!$seen) {
+            $seen = [];
+        }
         $trace = $e->getTrace();
         $prev = $e->getPrevious();
         $result[] = sprintf('%s%s: %s', $starter, get_class($e), $e->getMessage());
@@ -76,10 +78,11 @@ class UtilException
 
     /**
      * helper
+     *
      * @param $item
      * @return string
      */
-    private static function _argumentToString($item)
+    private static function _argumentToString($item): string
     {
         if (is_string($item)) {
             return 's.' . $item;
@@ -89,16 +92,20 @@ class UtilException
             return 'a.' . count($item);
         } elseif (is_numeric($item)) {
             return 'n.' . strval($item);
+        } elseif (is_null($item)) {
+            return 'null';
+        } elseif (is_bool($item)) {
+            return 'b.' . ($item ? 'true' : 'false');
         }
 
-        return "x." . $item;
+        // For any other type, including objects that can't be converted to string
+        return "x." . gettype($item);
     }
-
 
     /**
      * @return string
      */
-    public static function getDebugBacktraceAsText($skip=1, string $rootDirToRemove=null)
+    public static function getDebugBacktraceAsText(int $skip=1, string $rootDirToRemove=null): string
     {
         $stack = debug_backtrace();
         $output = '';
