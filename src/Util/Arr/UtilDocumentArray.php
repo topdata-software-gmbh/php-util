@@ -132,6 +132,7 @@ class UtilDocumentArray
      * aka numeric2assoc, aka _.keyBy (or _.indexBy in older versions)
      *
      * 05/2021 moved from UtilArray::arrayOfDocumentsToAssoc() to UtilDocumentArray::documentArrayToDict()
+     * 08/2024 it uses now self::arrayColumnDeep instead of self::arrayColumn
      *
      * @param array $array
      * @param string $keyName eg 'id'
@@ -140,7 +141,7 @@ class UtilDocumentArray
     public static function documentArrayToDict(array $array, string $keyName): array
     {
         $values = array_values($array);
-        $keys = self::arrayColumn($array, $keyName);
+        $keys = self::arrayColumnDeep($array, $keyName);
 
         return array_combine($keys, $values);
     }
