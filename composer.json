@@ -27,9 +27,5 @@
             "TopdataSoftwareGmbH\\HelperClasses\\": "src/HelperClasses/"
         }
     },
-<<<<<<< HEAD
-    "version": "4.2.4"
-=======
     "version": "4.2.5"
->>>>>>> 7f7b0d02fa70f31bebb1e373977cc4d5ac77b6a7
 }
