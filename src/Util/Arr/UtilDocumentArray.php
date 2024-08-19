@@ -140,7 +140,7 @@ class UtilDocumentArray
     public static function documentArrayToDict(array $array, string $keyName): array
     {
         $values = array_values($array);
-        $keys = self::arrayColumn($array, $keyName);
+        $keys = self::arrayColumnDeep($array, $keyName);
 
         return array_combine($keys, $values);
     }
