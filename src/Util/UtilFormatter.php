@@ -80,8 +80,10 @@ class UtilFormatter
 
         $base = log($sizeInBytes, 1024);
         $suffixes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+        $floorBase = (int)floor($base);
 
-        return number_format(round(pow(1024, $base - floor($base)), $precision), $precision) . ' ' . $suffixes[(int)floor($base)];
+        $actualPrecision = $floorBase === 0 ? 0 : $precision; // no decimals for Bytes
+        return number_format(round(pow(1024, $base - $floorBase), $actualPrecision), $actualPrecision) . ' ' . $suffixes[$floorBase];
     }
 
 
