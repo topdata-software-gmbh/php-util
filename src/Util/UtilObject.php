@@ -1,5 +1,8 @@
 <?php
 
+namespace TopdataSoftwareGmbH\Util;
+
+
 /**
  * 11/2024 created
  */

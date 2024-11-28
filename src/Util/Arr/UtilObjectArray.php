@@ -5,6 +5,7 @@ namespace TopdataSoftwareGmbH\Util\Arr;
 use TopdataSoftwareGmbH\Util\UtilDebug;
 use TopdataSoftwareGmbH\Util\UtilDict;
 use TopdataSoftwareGmbH\Util\UtilDocument;
+use TopdataSoftwareGmbH\Util\UtilObject;
 
 /**
  * utility functions for handling lists (aka arrays) of objects (with no getters/setters)
