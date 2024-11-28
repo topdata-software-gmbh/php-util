@@ -28,6 +28,7 @@ class UtilDocument
             }
             $ret[$key] = $srcDocument->$getterName();
         }
+        
         return $ret;
     }
 

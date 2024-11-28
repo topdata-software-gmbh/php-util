@@ -119,4 +119,24 @@ class UtilObjectArray
         return true;
     }
 
+    /**
+     * used by sw6shopimports
+     *
+     * 11/2024 created (Topdata)
+     *
+     * @param iterable $objects
+     * @param array $columnNames eg ['id', 'name']
+     * @return array[]
+     */
+    public static function pick(iterable $objects, $columnNames): array
+    {
+        $ret = [];
+        foreach($objects as $doc) {
+            $ret[] = UtilObject::pick($doc, $columnNames);
+        }
+
+        return $ret;
+    }
+    
+    
 }
