@@ -78,9 +78,14 @@ class UtilSyntaxHighlightingCli
         //* text, null:
         //    Output the text unchanged without any formatting. (filenames *.txt)
 
+        // check if pygmentize is installed
+        if (!is_executable('/usr/bin/pygmentize')) {
+            throw new \Exception('pygmentize is not installed. Please install it first.');
+        }
 
+        
         // Create a new Process instance for pygmentize
-        $process = new Process(['pygmentize', '-l', $language, '-f', 'terminal']);
+        $process = new Process(['/usr/bin/pygmentize', '-l', $language, '-f', 'terminal']);
 
         // Set input as the source code to be highlighted
         $process->setInput($sourceCode);
