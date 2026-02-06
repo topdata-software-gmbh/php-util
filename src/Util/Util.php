@@ -187,6 +187,7 @@ class Util
         if (count($exploded) < $numBack) {
             return $classname;
         }
+        
         return implode($delimiter, array_slice($exploded, count($exploded) - $numBack, $numBack));
     }
 

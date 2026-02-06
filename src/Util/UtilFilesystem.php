@@ -8,6 +8,40 @@ namespace TopdataSoftwareGmbH\Util;
 
 class UtilFilesystem
 {
+
+    /**
+     * [NEW] Deletes all files and subdirectories within a directory, but not the directory itself.
+     *
+     * 11/2025 created
+     *
+     * @param string $pathDirectory The path to the directory to empty.
+     */
+    public static function emptyDirectory(string $pathDirectory): void
+    {
+        if (!is_dir($pathDirectory)) {
+            return;
+        }
+
+        // Use a DirectoryIterator to loop through the contents
+        $iterator = new \DirectoryIterator($pathDirectory);
+        foreach ($iterator as $fileInfo) {
+            if ($fileInfo->isDot()) { // Skip '.' and '..'
+                continue;
+            }
+
+            $filePath = $fileInfo->getRealPath();
+
+            if ($fileInfo->isDir()) {
+                // Use the existing recursive delete method for subdirectories
+                self::deleteDirectoryRecursive($filePath);
+            } else {
+                // Delete files
+                unlink($filePath);
+            }
+        }
+    }
+
+
     /**
      * @param string $pathFile
      * @param int $idxStart
