@@ -288,9 +288,11 @@ class UtilDebug
      *
      * @param array|object $data The data structure to convert.
      * @param string $prefix Used for formatting the tree (internal use).
+     * @param PropertyAccessor|null $propertyAccessor The PropertyAccessor instance.
+     * @param int|null $maxLength Maximum length for string values before truncation.
      * @return string The ASCII representation of the tree.
      */
-    public static function tree(array|object $data, string $prefix = '', ?PropertyAccessor $propertyAccessor = null): string
+    public static function tree(array|object $data, string $prefix = '', ?PropertyAccessor $propertyAccessor = null, ?int $maxLength = null): string
     {
         if ($propertyAccessor === null) {
             $propertyAccessor = PropertyAccess::createPropertyAccessor();
@@ -319,9 +321,10 @@ class UtilDebug
 
             if (is_array($value) || is_object($value)) {
                 $output .= "$key\n";
-                $output .= self::tree($value, $newPrefix, $propertyAccessor);
+                $output .= self::tree($value, $newPrefix, $propertyAccessor, $maxLength);
             } else {
-                $output .= "$key: $value\n";
+                $stringValue = self::_formatValue($value, $maxLength);
+                $output .= "$key: $stringValue\n";
             }
         }
 
@@ -349,6 +352,25 @@ class UtilDebug
         }
 
         return $properties;
+    }
+
+    /**
+     * formatValue - Formats a value for display, applying truncation if needed
+     *
+     * @param mixed $value The value to format.
+     * @param int|null $maxLength Maximum length for string values before truncation.
+     * @return string The formatted value.
+     */
+    private static function _formatValue(mixed $value, ?int $maxLength = null): string
+    {
+        $stringValue = is_string($value) ? $value : (string) $value;
+        
+        if ($maxLength === null || strlen($stringValue) <= $maxLength) {
+            return $stringValue;
+        }
+        
+        $truncatedLength = strlen($stringValue) - $maxLength;
+        return substr($stringValue, 0, $maxLength) . '...' . "[$truncatedLength chars truncated]";
     }
 
 }
